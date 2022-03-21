@@ -16,7 +16,9 @@ const handleListen = () => console.log(`Listening on http://localhost:${port}`);
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-function handleConnection(socket) {}
+function handleConnection(socket) {
+    console.log(socket);
+}
 
 wss.on('connection', handleConnection);
 
