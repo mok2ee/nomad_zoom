@@ -10,6 +10,11 @@ html(lang="en")
         header
             h1 Nomad_Zoom
         main
-            h2 WELCOME TO NOMAD_ZOOM
-        button test
+            form#nick
+                input(type="text", name="", placeholder="nickname" required)
+                button Save
+            ul
+            form#msg
+                input(type="text", name="", placeholder="message" required)
+                button Send
         script(src="/public/js/app.js")

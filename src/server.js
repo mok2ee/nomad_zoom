@@ -16,17 +16,31 @@ const handleListen = () => console.log(`Listening on http://localhost:${port}`);
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+const sockets = [];
+
 wss.on("connection", (socket) => {
     console.log("Connected to Borwser");
-
+    socket["name"] = "None";
+    sockets.push(socket);
     socket.on("close", () => {
         console.log("Disconneted from Browser");
     });
     socket.on("message", (message) => {
-        console.log("Browser : ", message.toString());
+        const parsed = JSON.parse(message);
+        console.log(`Browser : ${parsed}`);
+        switch (parsed.type) {
+            case "msg":
+                sockets.forEach((val) => {
+                    val.send(`${socket.name} : ${parsed.data}`);
+                });
+                return;
+            case "name":
+                socket["name"] = parsed.data;
+                return;
+            default:
+                return;
+        }
     });
-
-    socket.send("hello from the Server");
 });
 
 server.listen(port, handleListen);
