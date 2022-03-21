@@ -1,14 +1,14 @@
-import http from 'http';
-import WebSocket from 'ws';
-import express from 'express';
+import http from "http";
+import WebSocket from "ws";
+import express from "express";
 
 const app = express();
 
-app.set('view engine', 'pug');
-app.set('views', __dirname + '/views');
-app.use('/public', express.static(__dirname + '/public'));
-app.get('/', (req, res) => res.render('home'));
-app.get('/*', (req, res) => res.redirect('/'));
+app.set("view engine", "pug");
+app.set("views", __dirname + "/views");
+app.use("/public", express.static(__dirname + "/public"));
+app.get("/", (req, res) => res.render("home"));
+app.get("/*", (req, res) => res.redirect("/"));
 
 const port = 3000;
 const handleListen = () => console.log(`Listening on http://localhost:${port}`);
@@ -16,10 +16,17 @@ const handleListen = () => console.log(`Listening on http://localhost:${port}`);
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-function handleConnection(socket) {
-    console.log(socket);
-}
+wss.on("connection", (socket) => {
+    console.log("Connected to Borwser");
 
-wss.on('connection', handleConnection);
+    socket.on("close", () => {
+        console.log("Disconneted from Browser");
+    });
+    socket.on("message", (message) => {
+        console.log("Browser : ", message.toString());
+    });
+
+    socket.send("hello from the Server");
+});
 
 server.listen(port, handleListen);
